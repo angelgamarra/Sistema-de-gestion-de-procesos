@@ -30,7 +30,7 @@ using namespace std; // para evitar usar std:: en cada instruccion
 
 
 
-
+// Pila de memoria - Gamarra Romero Angel Rodrigo
 
 // estructura para nodo de pila de memoria
 struct NodoMemoria {
