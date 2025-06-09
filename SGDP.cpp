@@ -260,3 +260,87 @@ void menu(ListaProcesos& lista) {
         int id, prioridad;
         string nombre;
 
+                // realiza la accion segun la opcion
+        switch (opcion) {
+            case 1:
+                cout << "id: "; cin >> id;
+                cout << "nombre: "; cin >> nombre;
+                cout << "prioridad: "; cin >> prioridad;
+                lista.insertar(id, nombre, prioridad);
+                break;
+            case 2:
+                cout << "id a eliminar: "; cin >> id;
+                lista.eliminar(id);
+                break;
+            case 3:
+                cout << "id a buscar: "; cin >> id;
+                if (Proceso* p = lista.buscar(id))
+                    cout << "encontrado: " << p->nombre << ", prioridad: " << p->prioridad << endl;
+                else
+                    cout << "no encontrado\n";
+                break;
+            case 4:
+                cout << "id a modificar: "; cin >> id;
+                cout << "nueva prioridad: "; cin >> prioridad;
+                lista.modificar_prioridad(id, prioridad);
+                break;
+            case 5:
+                lista.mostrar();
+                break;
+            case 6:
+                cout << "id a encolar: "; cin >> id;
+                if (Proceso* p = lista.buscar(id))
+                    cola.encolar(p);
+                else
+                    cout << "proceso no encontrado\n";
+                break;
+            case 7:
+                if (Proceso* p = cola.desencolar()) {
+                    cout << "Ejecutando proceso id: " << p->id << ", nombre: " << p->nombre << endl;
+                } else {
+                    cout << "cola vacia\n";
+                }
+                break;
+            case 8:
+                cola.mostrar();
+                break;
+            case 9:
+                pila.push();
+                cout << "bloque asignado\n";
+                break;
+            case 10:
+                pila.pop();
+                cout << "bloque liberado\n";
+                break;
+            case 11:
+                pila.mostrar();
+                break;
+            case 12:
+                lista.guardar_en_archivo("procesos.txt");
+                cout << "datos guardados\n";
+                break;
+            case 13:
+                lista.cargar_desde_archivo("procesos.txt");
+                cout << "datos cargados\n";
+                break;
+            case 0:
+                cout << "saliendo...\n";
+                break;
+            default:
+                cout << "opcion invalida\n";
+        }
+    } while (opcion != 0);
+}
+
+int main() {
+    ListaProcesos lista; // instancia de la lista de procesos
+
+    lista.cargar_desde_archivo("procesos.txt"); // carga procesos desde archivo al iniciar
+
+    menu(lista); // muestra el menu y espera acciones del usuario
+
+    lista.guardar_en_archivo("procesos.txt"); // guarda procesos al cerrar
+
+    return 0;
+}
+
