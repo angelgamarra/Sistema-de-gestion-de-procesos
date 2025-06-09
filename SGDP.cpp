@@ -9,6 +9,10 @@
 
 using namespace std; // para evitar usar std:: en cada instruccion
 
+// ============================
+// Lista enlazada - Vera Chavez Fernando Vera
+// ============================
+
 // estructura que representa un proceso
 struct Proceso {
     int id;             // identificador unico del proceso
