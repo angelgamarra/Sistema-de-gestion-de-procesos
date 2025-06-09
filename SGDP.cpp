@@ -2,7 +2,6 @@
 // se utiliza lista enlazada, cola de prioridad y pila
 // incluye persistencia de datos para los procesos
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -193,20 +192,9 @@ public:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ============================
 // Pila de memoria - Gamarra Romero Angel Rodrigo
+// ============================
 
 // estructura para nodo de pila de memoria
 struct NodoMemoria {
@@ -247,6 +235,10 @@ public:
         }
     }
 };
+
+
+
+
 
 
 
