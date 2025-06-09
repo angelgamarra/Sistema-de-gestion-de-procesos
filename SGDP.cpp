@@ -10,9 +10,63 @@
 using namespace std; // para evitar usar std:: en cada instruccion
 
 
+// ============================
+// Cola de prioridad - Gerson Vidal Curasi Saire
+// ============================
 
+// estructura nodo para la cola de prioridad
+struct NodoCola {
+    Proceso* proceso; // puntero al proceso
+    NodoCola* sig;    // siguiente nodo en la cola
+};
 
+// clase para gestionar la cola de prioridad (planificador de cpu)
+class ColaPrioridad {
+private:
+    NodoCola* frente; // inicio de la cola
 
+public:
+    // constructor: cola vacia
+    ColaPrioridad() : frente(nullptr) {}
+
+    // encola un proceso segun su prioridad (mayor prioridad va primero)
+    void encolar(Proceso* p) {
+        NodoCola* nuevo = new NodoCola{p, nullptr}; // nuevo nodo con el proceso
+
+        // si esta vacia o tiene mayor prioridad
+        if (!frente || p->prioridad > frente->proceso->prioridad) {
+            nuevo->sig = frente;
+            frente = nuevo;
+        } else {
+            NodoCola* actual = frente;
+            // busca la posicion donde insertar
+            while (actual->sig && actual->sig->proceso->prioridad >= p->prioridad)
+                actual = actual->sig;
+
+            nuevo->sig = actual->sig;
+            actual->sig = nuevo;
+        }
+    }
+
+    // saca el proceso con mayor prioridad y lo retorna
+    Proceso* desencolar() {
+        if (!frente) return nullptr; // si esta vacia
+        NodoCola* temp = frente;
+        frente = frente->sig; // avanza el frente
+        Proceso* p = temp->proceso; // obtiene proceso
+        delete temp; // libera nodo
+        return p;
+    }
+
+    // muestra la cola actual con sus prioridades
+    void mostrar() {
+        NodoCola* actual = frente;
+        while (actual) {
+            cout << "id: " << actual->proceso->id << " (prioridad: " << actual->proceso->prioridad << ")\n";
+            actual = actual->sig;
+        }
+    }
+};
 
 
 
