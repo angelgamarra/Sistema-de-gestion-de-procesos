@@ -2,9 +2,9 @@
 // se utiliza lista enlazada, cola de prioridad y pila
 // incluye persistencia de datos para los procesos
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <iostream> // para entrada y salida por consola
+#include <fstream> // para manejo de archivos (persistencia)
+#include <string> // para evitar usar std:: en cada instruccion
 
 using namespace std; // para evitar usar std:: en cada instruccion
 
@@ -191,7 +191,6 @@ public:
 
 
 
-
 // ============================
 // Pila de memoria - Gamarra Romero Angel Rodrigo
 // ============================
@@ -237,11 +236,9 @@ public:
 };
 
 
-
-
-
-
-
+// ============================
+// Menú de usuario e interacción - Sotelo Gallegos Raúl -Loaiza Quispe Melany Fiorela
+// ============================
 
 void menu(ListaProcesos& lista) {
     ColaPrioridad cola; // instancia de la cola de prioridad
