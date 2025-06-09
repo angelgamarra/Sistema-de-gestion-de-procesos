@@ -250,3 +250,21 @@ public:
 
 
 
+
+void menu(ListaProcesos& lista) {
+    ColaPrioridad cola; // instancia de la cola de prioridad
+    PilaMemoria pila;   // instancia de la pila de memoria
+
+    int opcion; // opcion elegida por el usuario
+    do {
+        // muestra el menu
+        cout << "\n--- menu del sistema de gestion de procesos ---\n";
+        cout << "1. agregar proceso\n2. eliminar proceso\n3. buscar proceso\n4. modificar prioridad\n5. ver lista de procesos\n";
+        cout << "6. encolar proceso\n7. ejecutar proceso\n8. ver cola de cpu\n";
+        cout << "9. asignar bloque de memoria\n10. liberar bloque\n11. ver estado de memoria\n";
+        cout << "12. guardar datos\n13. cargar datos\n0. salir\nopcion: ";
+        cin >> opcion; // lee la opcion
+
+        int id, prioridad;
+        string nombre;
+
