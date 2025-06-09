@@ -7,70 +7,123 @@
 #include <fstream>
 #include <string>
 
-using namespace std; // para evitar usar std:: en cada instruccion
+using namespace std; 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// estructura para nodo de pila de memoria
-struct NodoMemoria {
-    int bloque_id; // identificador del bloque
-    NodoMemoria* sig; // siguiente nodo (bloque siguiente)
+// estructura que representa un proceso
+struct Proceso {
+    int id;             // identificador unico del proceso
+    string nombre;      // nombre del proceso
+    int prioridad;      // nivel de prioridad del proceso (mayor valor = mayor prioridad)
+    Proceso* sig;       // puntero al siguiente proceso en la lista
 };
 
-// clase pila para manejar los bloques de memoria asignados
-class PilaMemoria {
+// clase para gestionar la lista enlazada de procesos
+class ListaProcesos {
 private:
-    NodoMemoria* cima; // tope de la pila
-    int contador = 0; // contador para asignar id a cada bloque
+    Proceso* cabeza; // puntero al inicio de la lista enlazada
 
 public:
-    // constructor: pila vacia
-    PilaMemoria() : cima(nullptr) {}
+    // constructor: inicializa la lista como vacia
+    ListaProcesos() : cabeza(nullptr) {}
 
-    // asigna un nuevo bloque de memoria (push)
-    void push() {
-        NodoMemoria* nuevo = new NodoMemoria{++contador, cima}; // nuevo nodo
-        cima = nuevo; // actualiza cima
+    // destructor: limpia la memoria al destruir el objeto
+    ~ListaProcesos() { limpiar(); }
+
+    // inserta un nuevo proceso al inicio de la lista
+    void insertar(int id, const string& nombre, int prioridad) {
+        Proceso* nuevo = new Proceso{id, nombre, prioridad, cabeza}; // crea nuevo nodo
+        cabeza = nuevo; // actualiza la cabeza de la lista
     }
 
-    // libera el ultimo bloque asignado (pop)
-    void pop() {
-        if (!cima) return; // si esta vacia
-        NodoMemoria* temp = cima;
-        cima = cima->sig; // avanza la cima
-        delete temp; // libera memoria
+    // elimina un proceso de la lista segun su id
+    void eliminar(int id) {
+        Proceso* actual = cabeza; // nodo actual para recorrer
+        Proceso* anterior = nullptr; // nodo anterior para actualizar enlaces
+
+        // busca el nodo a eliminar
+        while (actual && actual->id != id) {
+            anterior = actual;
+            actual = actual->sig;
+        }
+
+        // si no se encuentra, se sale
+        if (!actual) return;
+
+        // si es el primero, se actualiza la cabeza
+        if (!anterior)
+            cabeza = actual->sig;
+        else
+            anterior->sig = actual->sig; // enlaza el anterior con el siguiente
+
+        delete actual; // libera la memoria
     }
 
-    // muestra los bloques actuales en la pila
-    void mostrar() {
-        NodoMemoria* actual = cima;
+    // busca un proceso por su id y lo retorna
+    Proceso* buscar(int id) {
+        Proceso* actual = cabeza; // recorre desde el inicio
         while (actual) {
-            cout << "bloque de memoria id: " << actual->bloque_id << endl;
+            if (actual->id == id) return actual; // si coincide, se retorna
+            actual = actual->sig;
+        }
+        return nullptr; // si no se encuentra
+    }
+
+    // modifica la prioridad de un proceso dado su id
+    void modificar_prioridad(int id, int nueva_prioridad) {
+        Proceso* p = buscar(id); // busca el proceso
+        if (p) p->prioridad = nueva_prioridad; // si existe, modifica
+    }
+
+    // muestra todos los procesos registrados
+    void mostrar() {
+        Proceso* actual = cabeza;
+        while (actual) {
+            cout << "id: " << actual->id << ", nombre: " << actual->nombre
+                 << ", prioridad: " << actual->prioridad << endl;
             actual = actual->sig;
         }
     }
+
+    // guarda la lista de procesos en un archivo de texto
+    void guardar_en_archivo(const string& nombreArchivo) {
+        ofstream archivo(nombreArchivo); // abre archivo en modo escritura
+        Proceso* actual = cabeza;
+        while (actual) {
+            archivo << actual->id << ";" << actual->nombre << ";" << actual->prioridad << endl; // escribe datos separados por ;
+            actual = actual->sig;
+        }
+        archivo.close(); // cierra el archivo
+    }
+
+    // carga los procesos desde un archivo de texto
+    void cargar_desde_archivo(const string& nombreArchivo) {
+        ifstream archivo(nombreArchivo); // abre archivo en modo lectura
+        if (!archivo.is_open()) return; // si no se puede abrir, salir
+
+        limpiar(); // limpia la lista actual
+        int id, prioridad;
+        string nombre, linea;
+
+        // lee linea por linea
+        while (getline(archivo, linea)) {
+            size_t pos1 = linea.find(";"); // encuentra primera separacion
+            size_t pos2 = linea.find(";", pos1 + 1); // encuentra segunda
+            if (pos1 != string::npos && pos2 != string::npos) {
+                id = stoi(linea.substr(0, pos1)); // convierte id
+                nombre = linea.substr(pos1 + 1, pos2 - pos1 - 1); // extrae nombre
+                prioridad = stoi(linea.substr(pos2 + 1)); // convierte prioridad
+                insertar(id, nombre, prioridad); // inserta proceso
+            }
+        }
+        archivo.close(); // cierra archivo
+    }
+
+    // libera toda la memoria de la lista
+    void limpiar() {
+        while (cabeza) {
+            Proceso* temp = cabeza;
+            cabeza = cabeza->sig;
+            delete temp;
+        }
+    }
 };
-
-
-
